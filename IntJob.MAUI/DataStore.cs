@@ -7,167 +7,87 @@ using IntJob.DataAccess.DbAccess;
 
 namespace IntJob.Maui
 {
-	public class DataStore
+	public class DataStore<TModel, TData> where TData : class, IModelData<TModel>
 	{
-        private AgentData _agentData;
-        private HolidayData _holidayData;
-        private IndustryData _industryData;
-        private JobData _jobData;
-        private RateData _rateData;
+        private TData _modelData;
 
         public DataStore(IConfiguration config)
 		{
             SqliteDataAccess sqliteDataAccess = new SqliteDataAccess(config);
-            _agentData = new AgentData(sqliteDataAccess);
-            _holidayData = new HolidayData(sqliteDataAccess);
-            _industryData = new IndustryData(sqliteDataAccess);
-            _jobData = new JobData(sqliteDataAccess);
-            _rateData = new RateData(sqliteDataAccess);
+            _modelData = Activator.CreateInstance(typeof(TData), sqliteDataAccess) as TData;
         }
 
-        public async Task<AgentModel> GetAgent(int id)
+        public async Task<TModel> Get(int id)
         {
             try
             {
-                return await _agentData.GetAgent(id);
+                return await _modelData.Get(id);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to get agent: {ex.Message}");
-                return null;
+                Log.WriteWithTime($"Failed to get the item: {ex.Message}");
+                return default(TModel);
             }
         }
 
-        public async Task<IEnumerable<AgentModel>> ListAgents()
+        public async Task<IEnumerable<TModel>> List()
         {
             try
             {
-                return await _agentData.ListAgents();
+                return await _modelData.List();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to list agents: {ex.Message}");
-                return new List<AgentModel>();
+                Log.WriteWithTime($"Failed to list items: {ex.Message}");
+                return new List<TModel>();
             }
         }
 
-        public async Task<AgentModel> CreateAgent(AgentModel agent)
+        public async Task<TModel> Create(TModel item)
         {
             try
             {
-                return await _agentData.CreateAgent(agent);
+                return await _modelData.Create(item);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to create agent: {ex.Message}");
-                return null;
+                Log.WriteWithTime($"Failed to create the item: {ex.Message}");
+                return default(TModel);
             }
         }
 
-        public async Task<AgentModel> UpdateAgent(AgentModel agent)
+        public async Task<TModel> Update(TModel item)
         {
             try
             {
-                return await _agentData.UpdateAgent(agent);
+                return await _modelData.Update(item);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to update agent: {ex.Message}");
-                return null;
+                Log.WriteWithTime($"Failed to update the item: {ex.Message}");
+                return default(TModel);
             }
         }
 
-        public async Task<bool> DeleteAgent(int id)
+        public async Task<bool> Delete(int id)
         {
             try
             {
-                await _agentData.DeleteAgent(id);
+                await _modelData.Delete(id);
                 return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to delete agent: {ex.Message}");
+                Log.WriteWithTime($"Failed to delete the item: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<HolidayModel> GetHoliday(int id)
-        {
-            try
-            {
-                return await _holidayData.GetHoliday(id);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to get holiday: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<IEnumerable<HolidayModel>> ListHolidays()
-        {
-            try
-            {
-                return await _holidayData.ListHolidays();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to list holidays: {ex.Message}");
-                return new List<HolidayModel>();
-            }
-        }
-
-        public async Task<HolidayModel> CreateHoliday(HolidayModel holiday)
-        {
-            try
-            {
-                return await _holidayData.CreateHoliday(holiday);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to create holiday: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<HolidayModel> UpdateHoliday(HolidayModel holiday)
-        {
-            try
-            {
-                return await _holidayData.UpdateHoliday(holiday);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to update holiday: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<bool> DeleteHoliday(int id)
-        {
-            try
-            {
-                await _holidayData.DeleteHoliday(id);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Log.WriteWithTime($"Failed to delete holiday: {ex.Message}");
-                return false;
-            }
-        }
-    }
-
-    
+    }    
 }
 

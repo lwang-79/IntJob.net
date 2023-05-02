@@ -4,7 +4,7 @@ using System;
 
 namespace IntJob.DataAccess.Data
 {
-    public class HolidayData
+    public class HolidayData : IModelData<HolidayModel>
     {
         private readonly SqliteDataAccess _db;
 
@@ -13,14 +13,14 @@ namespace IntJob.DataAccess.Data
             _db = db;
         }
 
-        public Task<IEnumerable<HolidayModel>> ListHolidays()
+        public Task<IEnumerable<HolidayModel>> List()
         {
             string sql = @"SELECT * FROM Holiday ORDER BY Id DESC";
 
             return _db.LoadData<HolidayModel, dynamic>(sql, new { });
         }
 
-        public async Task<HolidayModel?> GetHoliday(int id)
+        public async Task<HolidayModel?> Get(int id)
         {
             string sql = @"SELECT * FROM Holiday WHERE Id = @Id";
 
@@ -29,7 +29,7 @@ namespace IntJob.DataAccess.Data
             return results.FirstOrDefault();
         }
 
-        public Task<HolidayModel> CreateHoliday(HolidayModel holiday)
+        public Task<HolidayModel> Create(HolidayModel holiday)
         {
             string sql = @"INSERT INTO Holiday (Date, Name)
                 VALUES (@Date, @Name);
@@ -42,7 +42,7 @@ namespace IntJob.DataAccess.Data
             });
         }
 
-        public Task<HolidayModel> UpdateHoliday(HolidayModel holiday)
+        public Task<HolidayModel> Update(HolidayModel holiday)
         {
             string sql = @"UPDATE Holiday
                 SET Date = @Date, Name = @Name
@@ -52,7 +52,7 @@ namespace IntJob.DataAccess.Data
             return _db.SaveData<HolidayModel, dynamic>(sql, holiday);
         }
 
-        public Task<HolidayModel> DeleteHoliday(int id)
+        public Task<HolidayModel> Delete(int id)
         {
             string sql = @"DELETE FROM Holiday WHERE Id = @Id;";
 

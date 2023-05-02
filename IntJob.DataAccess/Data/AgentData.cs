@@ -4,7 +4,7 @@ using System;
 
 namespace IntJob.DataAccess.Data
 {
-    public class AgentData
+    public class AgentData : IModelData<AgentModel>
     {
         private readonly SqliteDataAccess _db;
 
@@ -13,14 +13,14 @@ namespace IntJob.DataAccess.Data
             _db = db;
         }
 
-        public Task<IEnumerable<AgentModel>> ListAgents()
+        public Task<IEnumerable<AgentModel>> List()
         {
             string sql = @"SELECT * FROM Agent ORDER BY Id DESC";
 
             return _db.LoadData<AgentModel, dynamic>(sql, new { });
         }
 
-        public async Task<AgentModel?> GetAgent(int id)
+        public async Task<AgentModel?> Get(int id)
         {
             string sql = @"SELECT * FROM Agent WHERE Id = @Id";
 
@@ -29,7 +29,7 @@ namespace IntJob.DataAccess.Data
             return results.FirstOrDefault();
         }
 
-        public Task<AgentModel> CreateAgent(AgentModel agent)
+        public Task<AgentModel> Create(AgentModel agent)
         {
             string sql = @"INSERT INTO Agent (Name, FullName, Address, PhoneNumber, Email, BusinessHourStart, BusinessHourEnd)
                 VALUES (@Name, @FullName, @Address, @PhoneNumber, @Email, @BusinessHourStart, @BusinessHourEnd);
@@ -47,7 +47,7 @@ namespace IntJob.DataAccess.Data
             });
         }
 
-        public Task<AgentModel> UpdateAgent(AgentModel agent)
+        public Task<AgentModel> Update(AgentModel agent)
         {
             string sql = @"UPDATE Agent
                 SET Name = @Name, FullName = @FullName, Address = @Address,
@@ -59,7 +59,7 @@ namespace IntJob.DataAccess.Data
             return _db.SaveData<AgentModel, dynamic>(sql, agent);
         }
 
-        public Task<AgentModel> DeleteAgent(int id)
+        public Task<AgentModel> Delete(int id)
         {
             string sql = @"DELETE FROM Agent WHERE Id = @Id;";
 

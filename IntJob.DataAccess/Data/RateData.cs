@@ -4,7 +4,7 @@ using System;
 
 namespace IntJob.DataAccess.Data
 {
-    public class RateData
+    public class RateData : IModelData<RateModel>
     {
         private readonly SqliteDataAccess _db;
 
@@ -13,14 +13,14 @@ namespace IntJob.DataAccess.Data
             _db = db;
         }
 
-        public Task<IEnumerable<RateModel>> ListRates()
+        public Task<IEnumerable<RateModel>> List()
         {
             string sql = @"SELECT * FROM Rate ORDER BY Id DESC";
 
             return _db.LoadData<RateModel, dynamic>(sql, new { });
         }
 
-        public async Task<RateModel?> GetRate(int id)
+        public async Task<RateModel?> Get(int id)
         {
             string sql = @"SELECT * FROM Rate WHERE Id = @Id";
 
@@ -29,7 +29,7 @@ namespace IntJob.DataAccess.Data
             return results.FirstOrDefault();
         }
 
-        public Task<RateModel> CreateRate(RateModel rate)
+        public Task<RateModel> Create(RateModel rate)
         {
             string sql = @"INSERT INTO Rate (Name, MinTime, MinTimeRate, EachTime, 
                 EachTimeRate, EarlyCancelTime, EarlyCancelRate, LateCancelTime, 
@@ -62,7 +62,7 @@ namespace IntJob.DataAccess.Data
             });
         }
 
-        public Task<RateModel> UpdateRate(RateModel rate)
+        public Task<RateModel> Update(RateModel rate)
         {
             string sql = @"UPDATE Rate
                 SET Name = @Name, MinTime = @MinTime, MinTimeRate = @MinTimeRate,
@@ -78,7 +78,7 @@ namespace IntJob.DataAccess.Data
             return _db.SaveData<RateModel, dynamic>(sql, rate);
         }
 
-        public Task<RateModel> DeleteRate(int id)
+        public Task<RateModel> Delete(int id)
         {
             string sql = @"DELETE FROM Rate WHERE Id = @Id;";
 

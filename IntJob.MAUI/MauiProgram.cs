@@ -30,7 +30,11 @@ public static class MauiProgram
 
         var connectionStrings = builder.Configuration["ConnectionStrings"];
 
-        builder.Services.AddSingleton<DataStore>();
+        builder.Services.AddSingleton<DataStore<AgentModel, AgentData>>();
+        builder.Services.AddSingleton<DataStore<HolidayModel, HolidayData>>();
+        builder.Services.AddSingleton<DataStore<IndustryModel, IndustryData>>();
+        builder.Services.AddSingleton<DataStore<JobModel, JobData>>();
+        builder.Services.AddSingleton<DataStore<RateModel, RateData>>();
         builder.Services.AddTransient<MainPage>();
 
 #if DEBUG

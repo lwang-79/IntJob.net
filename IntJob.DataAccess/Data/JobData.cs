@@ -4,7 +4,7 @@ using System;
 
 namespace IntJob.DataAccess.Data
 {
-    public class JobData
+    public class JobData : IModelData<JobModel>
     {
         private readonly SqliteDataAccess _db;
 
@@ -13,14 +13,14 @@ namespace IntJob.DataAccess.Data
             _db = db;
         }
 
-        public Task<IEnumerable<JobModel>> ListJobs()
+        public Task<IEnumerable<JobModel>> List()
         {
             string sql = @"SELECT * FROM Job ORDER BY Id DESC";
 
             return _db.LoadData<JobModel, dynamic>(sql, new { });
         }
 
-        public async Task<JobModel?> GetJob(int id)
+        public async Task<JobModel?> Get(int id)
         {
             string sql = @"SELECT * FROM Job WHERE Id = @Id";
 
@@ -29,7 +29,7 @@ namespace IntJob.DataAccess.Data
             return results.FirstOrDefault();
         }
 
-        public Task<JobModel> CreateJob(JobModel job)
+        public Task<JobModel> Create(JobModel job)
         {
             string sql = @"INSERT INTO Job (AgentJobNumber, StartAt, Duration,
                     Income, AgentId, IndustryId, CancelAt, Comment, Status, RateId)
@@ -51,20 +51,20 @@ namespace IntJob.DataAccess.Data
             });
         }
 
-        public Task<JobModel> UpdateJob(JobModel job)
+        public Task<JobModel> Update(JobModel job)
         {
             string sql = @"UPDATE Job
                 SET AgentJobNumber = @AgentJobNumber, StartAt = @StartAt,
                     Duration = @Duration, Income = @Income, AgentId = @AgentId,
-                    IndustryId = @IndustryId, CancelAt = @CancelId,
-                    Comment = @Comment, Status = @Status, RateId = @RatedId
+                    IndustryId = @IndustryId, CancelAt = @CancelAt,
+                    Comment = @Comment, Status = @Status, RateId = @RateId
                 WHERE Id = @Id;
                 SELECT * FROM Job WHERE Id = @Id;";
 
             return _db.SaveData<JobModel, dynamic>(sql, job);
         }
 
-        public Task<JobModel> DeleteJob(int id)
+        public Task<JobModel> Delete(int id)
         {
             string sql = @"DELETE FROM Job WHERE Id = @Id;";
 

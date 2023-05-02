@@ -4,7 +4,7 @@ using System;
 
 namespace IntJob.DataAccess.Data
 {
-    public class IndustryData
+    public class IndustryData : IModelData<IndustryModel>
     {
         private readonly SqliteDataAccess _db;
 
@@ -13,14 +13,14 @@ namespace IntJob.DataAccess.Data
             _db = db;
         }
 
-        public Task<IEnumerable<IndustryModel>> ListIndustries()
+        public Task<IEnumerable<IndustryModel>> List()
         {
             string sql = @"SELECT * FROM Industry ORDER BY Id DESC";
 
             return _db.LoadData<IndustryModel, dynamic>(sql, new { });
         }
 
-        public async Task<IndustryModel?> GetIndustry(int id)
+        public async Task<IndustryModel?> Get(int id)
         {
             string sql = @"SELECT * FROM Industry WHERE Id = @Id";
 
@@ -29,7 +29,7 @@ namespace IntJob.DataAccess.Data
             return results.FirstOrDefault();
         }
 
-        public Task<IndustryModel> CreateIndustry(IndustryModel industry)
+        public Task<IndustryModel> Create(IndustryModel industry)
         {
             string sql = @"INSERT INTO Industry (Name)
                 VALUES (@Name);
@@ -38,7 +38,7 @@ namespace IntJob.DataAccess.Data
             return _db.SaveData<IndustryModel, dynamic>(sql, new{ industry.Name });
         }
 
-        public Task<IndustryModel> UpdateIndustry(IndustryModel industry)
+        public Task<IndustryModel> Update(IndustryModel industry)
         {
             string sql = @"UPDATE Industry
                 SET Name = @Name
@@ -48,7 +48,7 @@ namespace IntJob.DataAccess.Data
             return _db.SaveData<IndustryModel, dynamic>(sql, industry);
         }
 
-        public Task<IndustryModel> DeleteIndustry(int id)
+        public Task<IndustryModel> Delete(int id)
         {
             string sql = @"DELETE FROM Industry WHERE Id = @Id;";
 
