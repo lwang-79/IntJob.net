@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="IntJob.MauiShellApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:IntJob.MauiShellApp.Pages"
+    FlyoutIcon="menu_50.png">
+
+    <!--<ShellContent
+        Title="Dashboard"
+        ContentTemplate="{DataTemplate local:DashboardPage}"
+        Route="DashboardPage" />-->
+
+
+    <ShellContent
+        Title="Add Job"
+        Icon="menu_50.png"
+        ContentTemplate="{DataTemplate local:AddJobPage}"
+        Route="AddJobPage" />
+
+    <ShellContent
+        Title="Admin"
+        ContentTemplate="{DataTemplate local:AdminPage}"
+        Route="AdminPage" />
+
+</Shell>
+
